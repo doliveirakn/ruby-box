@@ -8,7 +8,7 @@ module RubyBox
     end
 
     def download_url
-      @session.get(file_content_url)["message"]
+      @session.get( file_content_url )["location"]
     end
 
     def copy_to( folder_id, name=nil )
@@ -28,7 +28,7 @@ module RubyBox
     end
 
     def stream( opts={} )
-      @session.do_stream( file_content_url, opts )
+      open(download_url, opts)
     end
 
     def upload_content( data )

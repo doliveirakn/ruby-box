@@ -187,6 +187,11 @@ f.close()
 f = open('./LOCAL.txt', 'w+')
 f.write( client.file_by_id(@file_id).download ) # lookups by id are more efficient
 f.close()
+
+# You can also grab the raw url with
+client.file_by_id(@file_id).download_url
+# Note that this URL is not persistent. Clients will need to follow the url immediately in order to
+# actually download the file
 ```
 
 * Deleting a file.

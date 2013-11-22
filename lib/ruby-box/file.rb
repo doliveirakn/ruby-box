@@ -7,6 +7,10 @@ module RubyBox
       resp = stream.read
     end
 
+    def download_url
+      @session.get(file_content_url)["message"]
+    end
+
     def copy_to( folder_id, name=nil )
 
       # Allow either a folder_id or a folder object
@@ -24,8 +28,7 @@ module RubyBox
     end
 
     def stream( opts={} )
-      url = "#{RubyBox::API_URL}/#{resource_name}/#{id}/content"
-      @session.do_stream( url, opts )
+      @session.do_stream( file_content_url, opts )
     end
 
     def upload_content( data )
@@ -72,6 +75,10 @@ module RubyBox
     end
 
     private
+    def file_content_url
+      "#{RubyBox::API_URL}/#{resource_name}/#{id}/content"
+    end
+    
 
     def resource_name
       'files'

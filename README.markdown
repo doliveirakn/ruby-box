@@ -120,8 +120,8 @@ Folders
 * Listing items in a folder:
 
 ```ruby
-files = client.folder('/image_folder').files # all files in a folder using a path (bad).
-files = client.folder(@folder_id).files # all files in a folder using an id (good).
+files = client.folder('/image_folder').files # all files in a folder using a path.
+files = client.folder(@folder_id).files # all files in a folder using an id.
 folders = client.root_folder.folders # all folders in the root directory.
 files_and_folders = client.folder('files').items # all files and folders in /files
 ```
@@ -129,14 +129,14 @@ files_and_folders = client.folder('files').items # all files and folders in /fil
 * Creating a folder:
 
 ```ruby
-client.folder_by_id(@folder_id).create_subfolder('subfolder') # using an id (good)
-client.folder('image_folder').create_subfolder('subfolder') # using a path (bad)
+client.folder_by_id(@folder_id).create_subfolder('subfolder') # using an id.
+client.folder('image_folder').create_subfolder('subfolder') # using a path.
 ```
 
 * Setting the description on a folder:
 
 ```ruby
-folder = client.folder('image_folder') # using a path (bad)
+folder = client.folder('image_folder') # using a path.
 folder.description = 'Description on Folder'
 folder.update
 ```
@@ -178,18 +178,18 @@ file = client.upload_file_by_folder_id('./LICENSE.txt', @folder_id)
 * Downloading a file.
 
 ```ruby
-# again, paths bad!
 f = open('./LOCAL.txt', 'w+')
 f.write( client.file('/license_folder/LICENSE.txt').download )
 f.close()
 
-# do this if you can
+# Or you can fetch by file.id, which is more efficient:
 f = open('./LOCAL.txt', 'w+')
 f.write( client.file_by_id(@file_id).download ) # lookups by id are more efficient
 f.close()
 
 # You can also grab the raw url with
 client.file_by_id(@file_id).download_url
+
 # Note that this URL is not persistent. Clients will need to follow the url immediately in order to
 # actually download the file
 ```
@@ -283,6 +283,46 @@ eresp.next_stream_position
 eresp.events.each do |ev|
   p "type=#{ev.event_id} type=#{ev.event_type} user=#{ev.created_by.name}"
 end
+```
+
+As-User
+-------
+
+* This must be manually enabled for your account by Box Staff.   Contact api@box.com for access.  [ More Info ] (http://developers.box.com/docs/#users-as-user)
+
+```ruby
+session = RubyBox::Session.new({
+  client_id: 'your-client-id',
+  client_secret: 'your-client-secret',
+  access_token: 'original-access-token' ,
+  as_user: 'your-users-box-id'
+})
+```
+Users
+------
+
+Current User Info
+
+```ruby
+me = client.me
+```
+
+Current User's enterprise
+
+```ruby
+me = client.me.enterprise
+```
+
+An array of Ruby:Box users in an enterprise (Supports Filtering, Limit and Offset)
+
+```ruby
+users = client.users
+```
+
+* Remeber the API filters "name" and "login" by the start of the string.  ie: to get "sean+awesome@gmail.com" an approriate filter term would be "sean"
+
+```ruby
+users = client.users("sean" , 10 , 1)
 ```
 
 Contributors
